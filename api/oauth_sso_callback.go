@@ -12,6 +12,7 @@ import (
 func ssoCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	payloadHex := r.FormValue("payload")
 	signature := r.FormValue("hmac")
+    sourceUrl := r.FormValue("source")
 
 	payloadBytes, err := hex.DecodeString(payloadHex)
 	if err != nil {
@@ -112,5 +113,8 @@ func ssoCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "<html><script>window.parent.close()</script></html>")
+	// fmt.Fprintf(w, "<html><script>window.parent.close()</script></html>")
+    hdoc := fmt.Sprintf ("<html><script>window.location.href='%s'</script></html>",sourceUrl)
+    fmt.Fprintf(w, hdoc)
+
 }

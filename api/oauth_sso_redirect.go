@@ -11,7 +11,9 @@ import (
 
 func ssoRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	commenterToken := r.FormValue("commenterToken")
+    sourceUrl := r.FormValue("source")
 	domain := r.Header.Get("Referer")
+    domain = "https://foodtrust.cn"
 
 	if commenterToken == "" {
 		fmt.Fprintf(w, "Error: %s\n", errorMissingField.Error())
@@ -82,6 +84,8 @@ func ssoRedirectHandler(w http.ResponseWriter, r *http.Request) {
 	q := u.Query()
 	q.Set("token", token)
 	q.Set("hmac", signature)
+    q.Set("source",sourceUrl)
+    logger.Infof("sso redirect called: source=%s\n", sourceUrl)
 	u.RawQuery = q.Encode()
 
 	http.Redirect(w, r, u.String(), http.StatusFound)
